@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'wxgds',
         'USER': 'root',
         'PASSWORD': 'ggcjdss2017',
-        'HOST': '192.168.117.102',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
