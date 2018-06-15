@@ -7,6 +7,7 @@ Page({
     motto: '数据识别程序',
     userInfo: {},
     hasUserInfo: false,
+    sessionno: '',
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
@@ -16,6 +17,33 @@ Page({
     })
   },
   loginTab: function(){
+    var that = this;
+    wx.request({
+      url: 'http://192.168.117.102:8000/wxgds/login/',
+      data: {
+        username: 'will',
+        password: '123',
+      },
+      header: {
+        "Content-Type": "application/json"
+      },
+      success:function(res){
+        if (res.data.status == 1000) {
+          console.log(res.data.session_no)
+          that.data.sessionno = res.data.session_no;
+          wx.showToast({
+            title: '登录成功！',
+          })
+        } else {
+         wx.showToast({
+           title: '登录失败！',
+         })
+        }
+      },
+    })
+  },
+  scanTab: function(){
+    var that = this;
     wx.scanCode({
       success: (res) => {
         console.log(res)
@@ -23,6 +51,8 @@ Page({
           url: 'http://192.168.117.102:8000/wxgds/devInfoQuery/',
           data: {
             dev_id: res.result,
+            session_no: that.data.sessionno,
+            username:'will',
           },
           header: {
             "Content-Type": "application/json"
@@ -30,15 +60,15 @@ Page({
           success: function (res) {
             console.log(res.data.status)
             var status = res.data.status
-            if (status == '0') {
+            if (status == '1000') {
               wx.showModal({
                 title: '查询结果',
-                content: res.data.data.dev_info,
+                content: res.data.dev_info,
               })
             }
-            else if (status == '404') {
+            else if (status == '2001') {
               wx.showToast({
-                title: '未找到数据',
+                title: '用户尚未登录',
                 duration: 1000
               })
             } else {
