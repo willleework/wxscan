@@ -15,13 +15,18 @@ from django.core.cache import cache
 
 
 # Create your views here.
+sessionid = '20170615tocken'
 '''
 首页函数（web）
 '''
-@require_user_login('请登录')
+@require_user_login_cache('请登录')
 def index(request):
+    resp = HttpResponseBase()
     if userauth.is_user_login(request):
-        return HttpResponse('首页测试')
+        resp.session_no = sessionid
+        resp.status = 1000
+        resp.info = '首页测试'
+        return HttpResponse(resp.convertToJson(), content_type="application/json")
     else:
         return HttpResponse('没有权限')
 
@@ -29,7 +34,7 @@ def index(request):
 '''
 设备信息查询
 '''
-@require_user_login('尚未登录，请先登录')
+@require_user_login_cache('尚未登录，请先登录')
 def devInfoQuery(request):
     # dev_id = 'zkysw_asia_xizang_0001'
     devid = request.GET['dev_id']
@@ -53,7 +58,8 @@ def login(requset):
     if issucess:
         resp.status = 1000
         resp.info = '登录成功'
-        cache.set(requset.GET['username'], 'haha', 20)
+        resp.session_no = sessionid
+        cache.set(requset.GET['username'], sessionid, 60*30) #token有效30min
         print('cache value:' + cache.get(requset.GET['username']))
     else:
         resp.status = 2004
@@ -65,5 +71,8 @@ def login(requset):
 用户登出
 '''
 def logout(request):
+    username = request.user.username
     userauth.user_logout(request)
+    cache.delete(username)
+    print("用户[%s]退出" % username)
     return HttpResponse('用户登出')
