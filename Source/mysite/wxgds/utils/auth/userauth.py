@@ -3,16 +3,12 @@
 # 用户权限认证模块
 #################################
 from django.http import HttpResponse
-# 权限相关
-from django.contrib.auth import authenticate, login, logout
-
-
+from django.contrib.auth import authenticate, login, logout # 权限相关
 ##################################
 
-# 用户登录
-# request,
-# username, 用户名
-# password, 密码
+'''
+用户登录
+'''
 def user_login(request, username, password):
     user = authenticate(username=username, password=password)
     if user is not None:
@@ -32,3 +28,5 @@ def user_logout(requset):
 #用户是否登录
 def is_user_login(request):
     return  request.user.is_authenticated
+
+
