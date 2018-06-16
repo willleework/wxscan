@@ -5,8 +5,9 @@
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      <button bindtap='loginTab'  class='querybutton'>登录</button>
+      <button bindtap='loginTab'  class='querybutton'>登录账号</button>
       <button bindtap='scanTab' class='querybutton'>扫码识别数据</button>
+      <button bindtap='logout' class='querybutton'>用户登出</button>
     </block>
   </view>
   <view class="usermotto">

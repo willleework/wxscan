@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from wxgds.models import DeviceInfo
+from django.contrib.sessions.models import Session
 
+from wxgds.models import DeviceInfo
 from wxgds.utils.auth import userauth
 from wxgds.utils.decorator.authdecorator import *
 from wxgds.utils.domanimodels.httpresponse import *
@@ -19,11 +20,11 @@ sessionid = '20170615tocken'
 '''
 首页函数（web）
 '''
-@require_user_login_cache('请登录')
+@require_user_login_cache('尚未登录，请先登录')
 def index(request):
     resp = HttpResponseBase()
     if userauth.is_user_login(request):
-        resp.session_no = sessionid
+        #resp.session_no = sessionid
         resp.status = 1000
         resp.info = '首页测试'
         return HttpResponse(resp.convertToJson(), content_type="application/json")
@@ -36,7 +37,6 @@ def index(request):
 '''
 @require_user_login_cache('尚未登录，请先登录')
 def devInfoQuery(request):
-    # dev_id = 'zkysw_asia_xizang_0001'
     devid = request.GET['dev_id']
     print('query id :' + devid)
     dev = DeviceInfo.objects.get(dev_id=devid)
@@ -58,9 +58,7 @@ def login(requset):
     if issucess:
         resp.status = 1000
         resp.info = '登录成功'
-        resp.session_no = sessionid
-        cache.set(requset.GET['username'], sessionid, 60*30) #token有效30min
-        print('cache value:' + cache.get(requset.GET['username']))
+        resp.session_no = requset.session.session_key
     else:
         resp.status = 2004
         resp.info = '登录失败'
@@ -71,8 +69,10 @@ def login(requset):
 用户登出
 '''
 def logout(request):
-    username = request.user.username
+    #username = request.user.username
     userauth.user_logout(request)
-    cache.delete(username)
-    print("用户[%s]退出" % username)
-    return HttpResponse('用户登出')
+    #print("用户[%s]退出" % username)
+    resp = HttpResponseBase()
+    resp.status = 1000
+    resp.info = '用户退出成功'
+    return HttpResponse(resp.convertToJson(), content_type="application/json")

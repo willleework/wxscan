@@ -4,12 +4,15 @@
 ##########################
 
 from django.http import HttpResponse
-from wxgds.utils.auth import userauth
+from django.core.cache import cache
 from functools import wraps
 
-from django.core.cache import cache
+import json
 
+from wxgds.utils.auth import userauth
+from wxgds.utils.common import commonhelper
 from wxgds.utils.domanimodels.httpresponse import HttpResponseBase
+
 
 def require_user_login(tips = '当前用户尚未登录！'):
     '''
@@ -43,17 +46,11 @@ def require_user_login_cache(tips = '当前用户尚未登录！'):
     def decorator(func):
         @wraps(func)
         def inner(request, *args, **kwargs):
-            serverSessionno = cache.get(request.GET['username'])
-            clientSessionno = request.GET['session_no']
-            print('server: '+ serverSessionno)
-            print('client: '+ clientSessionno)
-            # print('cache data;'+user.username)
-            if serverSessionno != clientSessionno:
-            #if not userauth.is_user_login(request):
+            sessionInfo = cache.get(request.GET['session_no'])
+            print('userinfo in cache:[%s]' % sessionInfo)
+            if (not sessionInfo) or (not sessionInfo.strip()) or (not commonhelper.is_json(sessionInfo)):
                 #没有登录，返回状态码2001
-                print('username：'+ request.user.username.encode('utf-8'))
-                print('autho: ' + '0' if request.user.is_authenticated else '1')
-                print('AnonymousUser[%s].Method Not Allowed (%s): %s' % (request.user.username.encode('utf-8'), request.method, request.path))
+                print('AnonymousUser Login, SessionId[%s].Method Not Allowed (%s): %s' % (request.GET['session_no'], request.method, request.path))
                 resp = HttpResponseBase()
                 resp.status = 2001
                 resp.info = tips

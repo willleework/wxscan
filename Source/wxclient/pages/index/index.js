@@ -42,6 +42,29 @@ Page({
       },
     })
   },
+  logout: function(){
+    var that = this;
+    wx.request({
+      url: 'http://192.168.117.102:8000/wxgds/logout/',
+      data: {
+        session_no: that.data.sessionno,
+      },
+      header: {
+        "Content-Type": "application/json"
+      },
+      success: function (res) {
+        if (res.data.status == 1000) {
+          wx.showToast({
+            title: '登出成功！',
+          })
+        } else {
+          wx.showToast({
+            title: '登出失败！',
+          })
+        }
+      },
+    })
+  },
   scanTab: function(){
     var that = this;
     wx.scanCode({

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse
-import json
+from wxgds.utils.domanimodels.modelbase import ConvertToJson
 
 '''
 http返回类型基类
@@ -10,7 +10,7 @@ rsp = httpResponseBase()
 rsp.status = 1000 #正常返回，无错误
 return rsp
 '''
-class HttpResponseBase():
+class HttpResponseBase(ConvertToJson):
 
     @property
     def status(self):
@@ -40,10 +40,6 @@ class HttpResponseBase():
         if not isinstance(value, str):
             raise ValueError('session_no信息必须是字符串!')
         self._session_no = value
-
-    #类信息序列化
-    def convertToJson(self):
-        return  json.dumps(self, default = lambda obj: obj.__dict__)
 
 
 '''
