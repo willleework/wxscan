@@ -16,7 +16,6 @@ from django.core.cache import cache
 
 
 # Create your views here.
-sessionid = '20170615tocken'
 '''
 首页函数（web）
 '''
@@ -53,15 +52,15 @@ def devInfoQuery(request):
 用户登录
 '''
 def login(requset):
-    issucess = userauth.user_login(requset, requset.GET['username'], requset.GET['password'])
+    loginresult = userauth.user_login_wx(requset, requset.GET['jscode'])
     resp = HttpResponseBase()
-    if issucess:
+    if loginresult['success'] == 'true':
         resp.status = 1000
         resp.info = '登录成功'
-        resp.session_no = requset.session.session_key
+        resp.session_no = loginresult['session_key']
     else:
         resp.status = 2004
-        resp.info = '登录失败'
+        resp.info = loginresult['info']
     return HttpResponse(resp.convertToJson(), content_type="application/json")
 
 
@@ -76,3 +75,4 @@ def logout(request):
     resp.status = 1000
     resp.info = '用户退出成功'
     return HttpResponse(resp.convertToJson(), content_type="application/json")
+

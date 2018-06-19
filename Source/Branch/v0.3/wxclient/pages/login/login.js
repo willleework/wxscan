@@ -12,33 +12,32 @@ Page({
   },
   //事件处理函数
   loginTab: function () {
-    var that = this;
-    wx.request({
-      url: 'http://192.168.117.103:8000/wxgds/login/',
-      data: {
-        username: 'will',
-        password: '123',
-      },
-      header: {
-        "Content-Type": "application/json"
-      },
+    wx.login({
       success: function (res) {
-        if (res.data.status == 1000) {
-          console.log(res.data.session_no)
-          app.globalData.sessionno = res.data.session_no;
-          /*wx.showToast({
-            title: '登录成功！',
-          })*/
-          wx.navigateTo({
-            url: '../main/main'
-          })
-        } else {
-          wx.showToast({
-            title: '登录失败！',
-          })
-        }
-      },
-    })
+        console.log('code: ' + res.code)
+        wx.request({
+          url: app.globalData.loginadd,
+          data: {
+            jscode: res.code,
+          },
+          header: {
+            "Content-Type": "application/json"
+          },
+          success: function (res) {
+            if (res.data.status == 1000) {
+              console.log('sessionno:'+res.data.session_no)
+              app.globalData.sessionno = res.data.session_no;
+              wx.navigateTo({
+                url: '../main/main'
+              })
+            } else {
+              wx.showToast({
+                title: '登录失败！' + res['info'],
+              })
+            }
+          },
+        })
+      }});
   },
   onLoad: function () {
     if (app.globalData.userInfo) {

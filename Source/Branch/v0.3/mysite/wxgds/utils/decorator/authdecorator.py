@@ -37,6 +37,7 @@ def require_user_login(tips = '当前用户尚未登录！'):
     return decorator
 
 
+#本地认证登录方式
 def require_user_login_cache(tips = '当前用户尚未登录！'):
     '''
     装饰器：只允许已登录的用户

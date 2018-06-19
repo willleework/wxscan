@@ -100,7 +100,7 @@ Page({
       success: (res) => {
         console.log(res)
         wx.request({
-          url: 'http://192.168.117.103:8000/wxgds/devInfoQuery/',
+          url: app.globalData.sanadd,
           data: {
             dev_id: res.result,
             session_no: app.globalData.sessionno,

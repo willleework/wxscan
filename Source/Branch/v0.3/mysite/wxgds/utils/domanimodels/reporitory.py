@@ -7,11 +7,18 @@ from wxgds.utils.domanimodels.modelbase import ConvertToJson
 class UserBase(ConvertToJson):
 
     @property
+    def open_id(self):
+        return self._open_id
+    @open_id.setter
+    def open_id(self, value):
+        self._open_id = value
+
+    @property
     def user_name(self):
         return self._user_name
     @user_name.setter
     def user_name(self, value):
-        self._user_name = value;
+        self._user_name = value
 
     @property
     def pass_word(self):

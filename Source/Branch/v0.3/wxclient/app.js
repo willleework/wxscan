@@ -36,5 +36,7 @@ App({
   globalData: {
     userInfo: null,
     sessionno: '',
+    loginadd: 'http://192.168.117.103:8000/wxgds/login/',
+    sanadd: 'http://192.168.117.103:8000/wxgds/devInfoQuery/',
   }
 })
