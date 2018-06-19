@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.sessions.models import Session
+from django.core.exceptions import ObjectDoesNotExist
 
 from wxgds.models import DeviceInfo
 from wxgds.utils.auth import userauth
@@ -36,17 +37,83 @@ def index(request):
 '''
 @require_user_login_cache('尚未登录，请先登录')
 def devInfoQuery(request):
+    resp = DevQueryHttpRsp()
     devid = request.GET['dev_id']
     print('query id :' + devid)
-    dev = DeviceInfo.objects.get(dev_id=devid)
-    resp = DevQueryHttpRsp()
-    resp.status = 1000
-    resp.info = '成功'
-    resp.dev_id = dev.dev_id
-    resp.dev_info = dev.dev_info
-    resp.dev_status = dev.dev_status
+    try:
+        dev = DeviceInfo.objects.get(dev_id=devid)
+        if dev:
+            resp.status = 1000
+            resp.info = '成功'
+            resp.dev_id = dev.dev_id
+            resp.dev_info = dev.dev_info
+            resp.dev_status = dev.dev_status
+        else:
+            resp.status = 3002
+            resp.info = '数据不存在'
+    except ObjectDoesNotExist as e:
+        resp.status = 3002
+        resp.info = '数据不存在'
+    except Exception as e:
+        resp.status = 3001
+        resp.info = e
     return HttpResponse(resp.convertToJson(), content_type="application/json")
 
+
+'''
+设备借出
+'''
+def borrowDevice(request):
+    resp = HttpResponseBase()
+    devid =  request.GET['dev_id']
+    if(devid==None or devid.strip()==''):
+        resp.status = 3000
+        resp.info = '无效的设备号'
+    try:
+        dev = DeviceInfo.objects.get(dev_id=devid)
+        if(dev and dev.dev_status=='1'):
+            dev.dev_status = '2'
+            dev.save()
+            resp.status = 1000
+            resp.info = '设备租借成功'
+        else:
+            resp.status = 3000
+            resp.info = '该设备不可借出'
+    except ObjectDoesNotExist as e:
+        resp.status = 3002
+        resp.info = '设备不存在'
+    except Exception as e:
+        resp.status = 3001
+        resp.info = e
+    return HttpResponse(resp.convertToJson(), content_type="application/json")
+
+
+'''
+设备归还
+'''
+def returnDevice(request):
+    resp = HttpResponseBase()
+    devid =  request.GET['dev_id']
+    if(devid==None or devid.strip()==''):
+        resp.status = 3000
+        resp.info = '无效的设备号'
+        resp.status = 1000
+        resp.info = '设备归还成功'
+    try:
+        dev = DeviceInfo.objects.get(dev_id=devid)
+        if(dev and dev.dev_status=='2'):
+            dev.dev_status = '1'
+            dev.save()
+        else:
+            resp.status = 3000
+            resp.info = '该设备不需归还'
+    except ObjectDoesNotExist as e:
+        resp.status = 3002
+        resp.info = '设备不存在'
+    except Exception as e:
+        resp.status = 3001
+        resp.info = e
+    return HttpResponse(resp.convertToJson(), content_type="application/json")
 
 '''
 用户登录

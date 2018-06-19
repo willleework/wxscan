@@ -31,8 +31,9 @@ Page({
                 url: '../main/main'
               })
             } else {
-              wx.showToast({
-                title: '登录失败！' + res['info'],
+              wx.showModal({
+                title: '登录失败',
+                content: res.data.info,
               })
             }
           },

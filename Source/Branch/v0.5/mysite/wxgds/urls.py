@@ -7,4 +7,6 @@ urlpatterns = [
     url(r'devInfoQuery/', views.devInfoQuery, name='devInfoQuery'),
     url(r'login/', views.login, name='login'),
     url(r'logout/', views.logout, name='logout'),
+    url(r'borrowDevice/', views.borrowDevice, name='borrowDevice'),
+    url(r'returnDevice/', views.returnDevice, name='returnDevice'),
 ]

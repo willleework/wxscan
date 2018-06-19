@@ -25,7 +25,7 @@ def user_login(request, username, password):
         login(request, user)
         #生成缓存信息并保存到cache里，用于下次请求认证
         cachUser = commonhelper.getUserInfoFromRequest(request)
-        cache.set(request.session.session_key, cachUser.convertToJson(), 60*60*12*7) #token有效7天
+        cache.set(request.session.session_key, cachUser.convertToJson(), 60*60*12)#token有效12小时
         print('user[%s] login success!sessionid[%s]' % (cachUser.user_name, request.session.session_key))
         return True
     else:
@@ -57,7 +57,7 @@ def user_login_wx(request, jscode):
             cachUser = UserBase()
             cachUser.open_id = ope.open_id
             cachUser.user_name = ope.nick_name
-            cache.set(res['session_key'], cachUser.convertToJson(), 60*60*12*7)#token有效7天
+            cache.set(res['session_key'], cachUser.convertToJson(), 60*60*12)#token有效12小时
             return {'success': 'true',  'info': '登录成功', 'session_key':res['session_key']}
         else:
             return {'success': 'false',  'info': '操作员用户信息认证失败'}

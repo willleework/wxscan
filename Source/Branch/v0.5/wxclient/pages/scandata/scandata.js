@@ -10,6 +10,8 @@ Page({
   data: {
     devid: '扫码识别设备ID',
     devdatainfo: '',
+    statusColor: '#999999',
+    statusText: '-',
   },
 
   /**
@@ -27,7 +29,7 @@ Page({
       app.userInfoReadyCallback = res => {
         this.setData({
           userInfo: res.userInfo,
-          hasUserInfo: true
+          hasUserInfo: true,
         })
       }
     } else {
@@ -98,7 +100,15 @@ Page({
     var page = this;
     wx.scanCode({
       success: (res) => {
-        console.log(res)
+        //console.log(res.data)
+        if (res.errMsg !='scanCode:ok')
+        {
+          wx.showToast({
+            title: '扫码失败',
+          })
+          return
+        }
+        //调用后台服务查询
         wx.request({
           url: app.globalData.sanadd,
           data: {
@@ -112,22 +122,33 @@ Page({
             console.log(res.data.status)
             var status = res.data.status
             if (status == '1000') {
-              /*wx.showModal({
-                title: '查询结果',
-                content: res.data.dev_info,
-              })*/
               page.setData({ devid: res.data.dev_id });
               page.setData({ devdatainfo: res.data.dev_info});
+              page.setData({
+                devid: res.data.dev_id,
+                devdatainfo: res.data.dev_info,
+                statusColor: page.getStatusColor(res.data.dev_status),
+                statusText: page.getStatusText(res.data.dev_status),
+              })
             }
             else if (status == '2001') {
               wx.showToast({
                 title: '用户尚未登录',
                 duration: 1000
               })
+              wx.navigateTo({
+                url: '../login/login'
+              })
+            }
+            else if(status == 3002){
+              wx.showModal({
+                title: '数据查询失败',
+                content: '没有检索到对应设备信息',
+              })
             } else {
-              wx.showToast({
-                title: '查询失败',
-                duration: 1000,
+              wx.showModal({
+                title: '数据查询失败',
+                content: res.data.info,
               })
             }
           }
@@ -135,4 +156,35 @@ Page({
       }
     })
   },
+  borrowTab: function(){
+
+  },
+  returnTab: function(){
+    
+  },
+  getStatusColor: function(status){
+    switch(status)
+    {
+      case '0':
+        return '#CC0000'
+      case '1':
+        return '#66CC99'
+      case '2':
+        return '#FF9900'
+      case '3':
+        return '#999999' 
+    }
+  },
+  getStatusText: function(status){
+    switch (status) {
+      case '0':
+        return '未初始化'
+      case '1':
+        return '正常'
+      case '2':
+        return '借出'
+      case '3':
+        return '不可用'
+    }
+  }
 })

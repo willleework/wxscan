@@ -27,10 +27,16 @@
             <view class="weui-media-box__title weui-media-box__title_in-text">设备信息</view>
             <view class="weui-media-box__desc">{{devdatainfo}}</view>
             <view class="weui-media-box__info">
-                <view class="weui-media-box__info__meta">状态： <text style="color:red">已借出</text></view>
+                <view class="weui-media-box__info__meta">状态： <text style="color:{{statusColor}}">{{statusText}}</text></view>
                 <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">其它信息</view>
             </view>
         </view>
         </view>
+    </view>
+    <view class="weui-panel">
+      <view class='weui-panel__bd'>
+          <button class="weui-btn mini-btn" type="warn" plain="true" size="mini" style='margin-right:10px;margin-top:5px;margin-bottom:5px;float:right' bindtap='borrowTab'>还</button>
+          <button class="weui-btn mini-btn" type="primary" plain="true" size="mini" style='margin-right:5px;margin-top:5px;margin-bottom:5px;float:right' bingtab='returnTab'>借</button>
+      </view>
     </view>
 </view>
