@@ -1,0 +1,33 @@
+<!--pages/main/main.wxml-->
+<view class="page">
+    <view class="weui-panel">
+      <view class="weui-cell weui-cells_in-small-appmsg">
+          <view class="weui-cell__hd"><image bindtap="loginTab" class="userinfo-avatar" style="margin-right: 5px" src="{{userInfo.avatarUrl}}" background-size="cover"></image></view>
+          <view class="weui-cell__bd weui-cell_primary"><view>{{userInfo.nickName}}</view></view>
+      </view>
+    </view>
+    <view class="weui-panel">
+      <view class="weui-media-box weui-media-box_small-appmsg">
+        <view class="weui-cells weui-cells_in-small-appmsg">
+          <navigator url="../scandata/scandata" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__hd">
+              <image class="iconfont icon-list" style="width: 20px;height: 20px;margin-right: 5px;margin-top: 2px;" />
+            </view>
+            <view class="weui-cell__bd weui-cell_primary">
+              <view>扫描识别基因数据</view>
+            </view>
+            <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+          </navigator>
+          <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__hd">
+              <image class="iconfont icon-list" style="width: 20px;height: 20px;margin-right: 5px;margin-top: 2px;" />
+            </view>
+            <view class="weui-cell__bd weui-cell_primary">
+                <view>基因数据信息录入</view>
+            </view>
+            <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+          </navigator>
+        </view>
+      </view>
+    </view>
+</view>

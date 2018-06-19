@@ -1,12 +1,15 @@
 {
-  "pages":[
+  "pages": [
+        "pages/login/login",
+    "pages/scandata/scandata",
+    "pages/main/main",
     "pages/index/index",
     "pages/logs/logs"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTitleText": "中科院基因数据查询",
+    "navigationBarTextStyle": "black"
   }
 }
