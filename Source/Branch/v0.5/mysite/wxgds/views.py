@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.cache import cache
 
 from wxgds.models import DeviceInfo
 from wxgds.utils.auth import userauth
@@ -12,9 +14,6 @@ from wxgds.utils.decorator.authdecorator import *
 from wxgds.utils.domanimodels.httpresponse import *
 
 import json
-
-from django.core.cache import cache
-
 
 # Create your views here.
 '''
@@ -63,6 +62,7 @@ def devInfoQuery(request):
 '''
 设备借出
 '''
+@require_user_login_cache('尚未登录，请先登录')
 def borrowDevice(request):
     resp = HttpResponseBase()
     devid =  request.GET['dev_id']
@@ -115,8 +115,26 @@ def returnDevice(request):
         resp.info = e
     return HttpResponse(resp.convertToJson(), content_type="application/json")
 
+
 '''
-用户登录
+用户注册
+'''
+@csrf_exempt
+def register(request):
+    regresult = userauth.user_register_wx(request)
+    resp = HttpResponseBase()
+    if regresult['success'] == 'true':
+        resp.status = 1000
+        resp.info = regresult['info']
+    else:
+        resp.status = 3000
+        print('login errinfo:' + regresult['info'].decode('utf-8'))
+        resp.info = regresult['info']
+    return HttpResponse(resp.convertToJson(), content_type="application/json")
+
+
+'''
+用户登录（微信方式）
 '''
 def login(requset):
     loginresult = userauth.user_login_wx(requset, requset.GET['jscode'])
@@ -127,7 +145,7 @@ def login(requset):
         resp.session_no = loginresult['session_key']
     else:
         resp.status = 2004
-        print('login errinfo:'+loginresult['info'])
+        #print('login errinfo:'+loginresult['info'])
         resp.info = loginresult['info']
     return HttpResponse(resp.convertToJson(), content_type="application/json")
 

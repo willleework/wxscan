@@ -9,11 +9,11 @@
     <view class="weui-panel">
        <view class="weui-cells weui-cells_after-title">
             <view class="weui-cell weui-cell_input weui-cell_warn">
-                <view class="weui-cell__hd">
+                <view class="weui-cell__hd" style='width=90px'>
                     <view class="weui-label" style='color:blue'>设备号</view>
                 </view>
                 <view class="weui-cell__bd">
-                    <input class="weui-input" placeholder="{{devid}}"></input>
+                    <input class="weui-input" placeholder="{{devid.length==0?'扫码识别设备信息':devid}}"></input>
                 </view>
                 <view class="weui-cell__ft">
                     <icon bindtap='scanTab' class="iconfont icon-erweima" style="font-size:30px;color:blue" color="#E64340"></icon>
@@ -25,18 +25,15 @@
       <view class="weui-panel__bd">
         <view class="weui-media-box weui-media-box_text">
             <view class="weui-media-box__title weui-media-box__title_in-text">设备信息</view>
-            <view class="weui-media-box__desc">{{devdatainfo}}</view>
+            <view class="weui-media-box__desc">
+              <view style='margin-bottom:4px'>设备号: {{devid}}</view>
+              <view>设备信息: {{devdatainfo}}</view>
+            </view>
             <view class="weui-media-box__info">
                 <view class="weui-media-box__info__meta">状态： <text style="color:{{statusColor}}">{{statusText}}</text></view>
                 <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">其它信息</view>
             </view>
         </view>
         </view>
-    </view>
-    <view class="weui-panel">
-      <view class='weui-panel__bd'>
-          <button class="weui-btn mini-btn" type="warn" plain="true" size="mini" style='margin-right:10px;margin-top:5px;margin-bottom:5px;float:right' bindtap='borrowTab'>还</button>
-          <button class="weui-btn mini-btn" type="primary" plain="true" size="mini" style='margin-right:5px;margin-top:5px;margin-bottom:5px;float:right' bingtab='returnTab'>借</button>
-      </view>
     </view>
 </view>

@@ -9,7 +9,8 @@
     </block>
   </view>
   <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
+    <text class="user-motto" style='text-align:center'>{{motto}}</text>
+    <text bindtap='registerTab' class="user-motto" style="display:block;text-decoration:underline;text-align:center;color:#398DEE;font-size: 8pt;">绑定微信账号</text>
   </view>
   </form>
 </view>

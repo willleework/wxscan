@@ -36,7 +36,10 @@ App({
   globalData: {
     userInfo: null,
     sessionno: '',
+    rigisteradd: 'http://192.168.117.103:8000/wxgds/register/',
     loginadd: 'http://192.168.117.103:8000/wxgds/login/',
     sanadd: 'http://192.168.117.103:8000/wxgds/devInfoQuery/',
+    borrowadd: 'http://192.168.117.103:8000/wxgds/borrowDevice/',
+    returnadd: 'http://192.168.117.103:8000/wxgds/returnDevice/',
   }
 })

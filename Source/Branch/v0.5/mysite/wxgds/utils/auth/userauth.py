@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate, login, logout # 权限相关
 from django.core.cache import cache
 
 import json
-
 import requests
 
 from wxgds.utils.common import commonhelper
@@ -33,6 +32,37 @@ def user_login(request, username, password):
         return False
 
 
+
+'''
+用户注册，微信方式
+'''
+def user_register_wx(request):
+    jscode = request.POST.get('jscode', None)
+    nickname = request.POST.get('nickname', None)
+    if jscode == None:
+        return {'success': 'false', 'info': '无效的用户信息{null}'}
+    print('get user info ;' +jscode.decode('utf-8'))
+    res = GetWxUsrSession(jscode)
+    openid = None
+    #获取微信openid信息
+    if(res.has_key('openid')):
+        openid = res['openid']
+    # 判断openid是否有效
+    if openid == None or openid.strip() == '':
+        errinf = ''
+        if res.has_key('errmsg'):
+            errinf =  res['errmsg']
+        print('[%s]user login failed: %s' % (jscode, errinf))
+        return {'success':'false', 'info':errinf}
+    else:
+        opes = Operator.objects.filter(open_id=openid);
+        if(len(opes)>0):
+            return {'success': 'false', 'info': '用户已存在'}
+        else:
+            Operator.objects.create(open_id=openid, nick_name=nickname)
+            return {'success': 'true', 'info': '用户注册申请成功，请等待审核'}
+
+
 '''
 用户登录，微信方式
 '''
@@ -47,7 +77,7 @@ def user_login_wx(request, jscode):
         errinf = ''
         if res.has_key('errmsg'):
             errinf =  res['errmsg']
-        print('[%s]user login failed: %s' % (jscode, errinf))
+        #print('[%s]user login failed: %s' % (jscode, errinf.decode('utf-8')))
         return {'success':'false', 'info':errinf}
     else:
         #微信登录成功，进行本地操作员认证，暂未实现授权模块

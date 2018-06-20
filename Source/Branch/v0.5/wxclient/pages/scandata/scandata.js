@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    devid: '扫码识别设备ID',
+    devid: '',
     devdatainfo: '',
     statusColor: '#999999',
     statusText: '-',
@@ -122,8 +122,6 @@ Page({
             console.log(res.data.status)
             var status = res.data.status
             if (status == '1000') {
-              page.setData({ devid: res.data.dev_id });
-              page.setData({ devdatainfo: res.data.dev_info});
               page.setData({
                 devid: res.data.dev_id,
                 devdatainfo: res.data.dev_info,
@@ -157,10 +155,50 @@ Page({
     })
   },
   borrowTab: function(){
-
+    wx.showToast({
+      title: 'ceshi borrow',
+    })
+    /*if (page.data.devid.length<=0)
+    {
+      wx.showToast({
+        title: '无效的设备号',
+        duration: 2000,
+      })
+      return
+    }
+    //调用后台服务查询
+    wx.request({
+      url: app.globalData.borrowadd,
+      data: {
+        dev_id: page.data.devid,
+        session_no: app.globalData.sessionno,
+      },
+      header: {
+        "Content-Type": "application/json"
+      },
+      success: function (res) {
+        console.log(res.data.status)
+        var status = res.data.status
+        if (status == '1000') {
+          wx.showModal({
+            title: '成功',
+            content: '设备租用成功',
+          })
+        }
+        else {
+          wx.showModal({
+            title: '失败',
+            content: '设备租用失败：'+res.data.info,
+          })
+        }
+      }
+    })*/
   },
   returnTab: function(){
-    
+    wx.showToast({
+      title: 'ceshi return',
+      duration: 1000,
+    })
   },
   getStatusColor: function(status){
     switch(status)

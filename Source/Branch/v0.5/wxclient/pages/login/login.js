@@ -40,6 +40,37 @@ Page({
         })
       }});
   },
+  registerTab: function(){
+    wx.login({
+      success: function (res) {
+        console.log('code: ' + res.code)
+        wx.request({
+          url: app.globalData.rigisteradd,
+          method: "POST",  
+          data: {
+            jscode: res.code,
+            nickname: app.globalData.userInfo.nickName
+          },
+          header: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          success: function (res) {
+            if (res.data.status == 1000) {
+              wx.showModal({
+                title: '注册成功',
+                content: res.data.info,
+              })
+            } else {
+              wx.showModal({
+                title: '注册失败',
+                content: res.data.info,
+              })
+            }
+          },
+        })
+      }
+    });
+  },
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({
